@@ -1,3 +1,3 @@
 # Python
 Code 1:
-Web Screapping !
+Web Scrapping !
