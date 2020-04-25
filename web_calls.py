@@ -1,0 +1,81 @@
+#!/usr/bin/python3
+
+import requests
+import sys
+import re
+
+class Calls:
+
+    def __init__(self,url,proxies):
+        self.url = url
+        self.proxies = proxies
+
+
+    def Get(self,url,param):
+        r = requests.get(url,headers = param,proxies = proxies)
+        return r.status_code
+
+    def Post(self,url,data):
+        r = requests.post(url,)
+        return r.status_code
+
+#Usage
+if (len(sys.argv) < 2):
+    #print(f'Usage: python {sys.argv[0]} <target url>')
+    print("Usage: python {} --options -u <http[s]://target url>".format(sys.argv[0]))
+    exit()
+
+# Intialization
+
+# Checking options
+arg = 1
+cookie = False
+header = False
+proxies = False
+for option in sys.argv:
+    if option == '--help' or option == '-h' or ( not '-u' in sys.argv):
+        print("\nUsage:   python {} --options -u <http[s]://target url>".format(sys.argv[0]))
+        print("Options: ")
+        print("     -c,  --Cookie   \"CookieName=CookieValue\" ")
+        print("     -p,  --proxy    \"http[s]://IP:Port\" ")
+        print("     -H,  --Header   \"HeaderName:HeaderValue\" \n\n\n")
+        exit()
+    if option == '-u':
+        url = sys.argv[arg]
+    
+    if option == '-c':
+        cookie = sys.argv[arg]
+
+    if option == '-H':
+        header = sys.argv[arg]
+        header = header.split(":",1)
+    
+    if option == '-p':
+        if(not re.match("^https?://",sys.argv[arg])):
+            print("\nDefine proxy: Should start with either http:// or https://\n\n")
+            exit()
+        proxies = { "http": sys.argv[arg], "https": sys.argv[arg],}
+    arg += 1
+
+if(not re.match("^https?://",url)):
+    print("\nDefine protocol: Target url pattern should start with either http:// or https://\n\n")
+    exit()
+
+
+#Object instance
+web_call = Calls(url,proxies)
+
+if cookie or header:
+    param = {}
+    if(cookie):
+        param['Cookie'] = cookie
+
+    if(header):
+        param[header[0]] = header[1]
+
+else:
+    param = False
+
+
+get_return = web_call.Get(url,param)
+print(get_return)
