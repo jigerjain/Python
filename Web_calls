@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+# Tool used to make web calls using request library
 import requests
 import sys
 import re
